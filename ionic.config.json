@@ -1,6 +1,6 @@
 {
   "name": "TPIonic",
-  "app_id": "",
+  "app_id": "9291e834",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
