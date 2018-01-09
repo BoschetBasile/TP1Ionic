@@ -8,22 +8,26 @@ declare var google;
   selector: 'about-page',
   templateUrl: 'about.html'
 })
-export class AboutPage {
+export class AboutPage 
+{
  
   @ViewChild('map') mapElement: ElementRef;
   map: any;
  
-  constructor(public navCtrl: NavController, , public geolocation: Geolocation) {
+  constructor(public navCtrl: NavController, public geolocation: Geolocation) {
  
   }
  
-  ionViewDidLoad(){
+  ionViewDidLoad()
+  {
     this.loadMap();
   }
  
-  loadMap(){
+  loadMap()
+  {
  
-    this.geolocation.getCurrentPosition().then((position) => {
+    this.geolocation.getCurrentPosition().then((position) => 
+    {
  
       let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
  
@@ -55,13 +59,15 @@ export class AboutPage {
  
   }
 
-  addInfoWindow(marker, content){
+  addInfoWindow(marker, content)
+  {
  
-  let infoWindow = new google.maps.InfoWindow({
-    content: content
-  });
- 
-  google.maps.event.addListener(marker, 'click', () => {
-    infoWindow.open(this.map, marker);
-  });
+    let infoWindow = new google.maps.InfoWindow({
+      content: content
+    });
+   
+    google.maps.event.addListener(marker, 'click', () => {
+      infoWindow.open(this.map, marker);
+    });
+  }
 }
