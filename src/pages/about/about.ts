@@ -1,73 +1,80 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation';
- 
-declare var google;
- 
+import {
+  GoogleMaps,
+  GoogleMap,
+  GoogleMapsEvent,
+  GoogleMapOptions,
+  CameraPosition,
+  MarkerOptions,
+  Marker
+} from '@ionic-native/google-maps';
+import { NavController } from 'ionic-angular';
+
 @Component({
-  selector: 'about-page',
+  selector: 'page-about',
   templateUrl: 'about.html'
 })
-export class AboutPage 
-{
- 
-  @ViewChild('map') mapElement: ElementRef;
-  map: any;
- 
-  constructor(public navCtrl: NavController, public geolocation: Geolocation) {
- 
-  }
- 
-  ionViewDidLoad()
-  {
-    this.loadMap();
-  }
- 
-  loadMap()
-  {
- 
-    this.geolocation.getCurrentPosition().then((position) => 
-    {
- 
-      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
- 
-      let mapOptions = {
-        center: latLng,
-        zoom: 15,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-      }
- 
-      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
- 
-    }, (err) => {
-      console.log(err);
-    });
- 
+
+export class AboutPage {
+  latitude: number;
+  longitude: number;
+  map: GoogleMap;
+
+  constructor(private geolocation: Geolocation,
+              private googleMaps: GoogleMaps,
+              public navCtrl: NavController, ) {
   }
 
-  addMarker(){
- 
-  let marker = new google.maps.Marker({
-    map: this.map,
-    animation: google.maps.Animation.DROP,
-    position: this.map.getCenter()
-  });
- 
-  let content = "<h4>Information!</h4>";         
- 
-  this.addInfoWindow(marker, content);
- 
+  getCurrentPosition() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.latitude = resp.coords.latitude;
+      this.longitude = resp.coords.longitude;
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
+
+    let watch = this.geolocation.watchPosition();
+    watch.subscribe((data) => {
+      this.latitude = data.coords.latitude;
+      this.longitude = data.coords.longitude;
+    });
   }
 
-  addInfoWindow(marker, content)
-  {
- 
-    let infoWindow = new google.maps.InfoWindow({
-      content: content
-    });
-   
-    google.maps.event.addListener(marker, 'click', () => {
-      infoWindow.open(this.map, marker);
-    });
+  watchPosition() {
+      const mapOptions: GoogleMapOptions = {
+        camera: {
+          target: {
+            lat: this.latitude,
+            lng: this.longitude
+          },
+          zoom: 18,
+          tilt: 30
+        }
+      };
+
+      this.map = GoogleMaps.create('map_canvas', mapOptions);
+
+      this.map.one(GoogleMapsEvent.MAP_READY)
+        .then(() => {
+          console.log('Map is ready!');
+
+          this.map.addMarker({
+              title: 'Ionic',
+              icon: 'blue',
+              animation: 'DROP',
+              position: {
+                lat: this.latitude,
+                lng: this.longitude
+              }
+            })
+            .then(marker => {
+              marker.on(GoogleMapsEvent.MARKER_CLICK)
+                .subscribe(() => {
+                  alert('clicked');
+                });
+            });
+        });
+    }
   }
-}
+
