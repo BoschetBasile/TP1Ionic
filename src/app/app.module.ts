@@ -4,6 +4,7 @@ import {Camera} from '@ionic-native/camera';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { Geolocation } from '@ionic-native/geolocation';
+import { GoogleMaps } from '@ionic-native/google-maps';
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
@@ -34,7 +35,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   ],
   providers: [
     StatusBar,
-    SplashScreen, Camera,
+    SplashScreen, Camera, Geolocation, GoogleMaps,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
