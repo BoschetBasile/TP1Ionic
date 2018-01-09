@@ -6,7 +6,7 @@ declare var google;
  
 @Component({
   selector: 'about-page',
-  templateUrl: 'home.html'
+  templateUrl: 'about.html'
 })
 export class AboutPage {
  
